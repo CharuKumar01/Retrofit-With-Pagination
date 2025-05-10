@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "com.example.pagination"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.pagination"
@@ -42,4 +42,8 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    // Retrofit
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
 }
