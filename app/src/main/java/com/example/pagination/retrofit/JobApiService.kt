@@ -10,4 +10,4 @@ interface JobApiService {
     fun getJobList(
         @Query("page") page: Int
     ): Call<JobListResponse>
-}
+}   
