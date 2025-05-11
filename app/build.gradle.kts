@@ -30,6 +30,9 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
+    dataBinding{
+        enable = true
+    }
 }
 
 dependencies {
@@ -46,4 +49,12 @@ dependencies {
     // Retrofit
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
+
+    //Navigation
+    implementation(libs.androidx.navigation.fragment.ktx)
+    implementation("androidx.navigation:navigation-ui-ktx:2.9.0")
+
+    //Glide
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+    annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
 }
