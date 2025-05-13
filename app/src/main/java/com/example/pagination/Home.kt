@@ -40,7 +40,7 @@ class Home : Fragment() {
         val adapter = AnimeAdapter()
 
         lifecycleScope.launch(Dispatchers.IO) {
-            val response = jikanAPI.getTopAnime()
+            val response = jikanAPI.getTopAnime(2)
             if (response.isSuccessful) {
                 val dataList = response.body()?.data ?: emptyList()
 
