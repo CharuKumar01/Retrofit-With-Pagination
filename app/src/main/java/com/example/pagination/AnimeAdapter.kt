@@ -1,40 +1,39 @@
 package com.example.pagination
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.pagination.data.Anime
 import com.example.pagination.databinding.ItemAnimeBinding
 
-class AnimeAdapter : RecyclerView.Adapter<AnimeAdapter.AnimeViewHolder>() {
-
-    private var animeList: List<Anime> = emptyList()
-
-    @SuppressLint("NotifyDataSetChanged")
-    fun submitList(list: List<Anime>) {
-        this.animeList = list
-        notifyDataSetChanged()
-    }
+class AnimeAdapter : ListAdapter<Anime, AnimeAdapter.AnimeViewHolder>(AnimeDiffCallBack()) {
 
     inner class AnimeViewHolder(val bind: ItemAnimeBinding) : RecyclerView.ViewHolder(bind.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AnimeViewHolder {
-        val bind = ItemAnimeBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return AnimeViewHolder(bind)
-    }
-
-    override fun getItemCount(): Int {
-        return animeList.size
+        return AnimeViewHolder(ItemAnimeBinding.inflate(LayoutInflater.from(parent.context), parent, false))
     }
 
     override fun onBindViewHolder(holder: AnimeViewHolder, position: Int) {
-        val currentAnime = animeList[position]
+        val currentAnime = getItem(position)
         holder.bind.apply {
             Glide.with(animeImage.context)
                 .load(currentAnime.images.jpg.image_url)
                 .into(animeImage)
         }
     }
+}
+
+class AnimeDiffCallBack : DiffUtil.ItemCallback<Anime>(){
+    override fun areItemsTheSame(oldItem: Anime, newItem: Anime): Boolean {
+        return oldItem.images == newItem.images
+    }
+
+    override fun areContentsTheSame(oldItem: Anime, newItem: Anime): Boolean {
+        return oldItem == newItem
+    }
+
 }

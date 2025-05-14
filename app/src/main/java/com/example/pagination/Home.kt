@@ -1,16 +1,17 @@
 package com.example.pagination
 
+import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.bumptech.glide.Glide
+import androidx.recyclerview.widget.RecyclerView
+import com.example.pagination.data.Anime
 import com.example.pagination.databinding.FragmentHomeBinding
 import com.example.pagination.retrofit.JikanAPI
 import com.example.pagination.retrofit.RetrofitHelper
@@ -22,6 +23,12 @@ import kotlinx.coroutines.withContext
 class Home : Fragment() {
     private lateinit var bind: FragmentHomeBinding
 
+    private var isLoading = false
+    private var currentPage = 1
+    private lateinit var adapter: AnimeAdapter
+    private val nextAnimeList = mutableListOf<Anime>()
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -32,26 +39,58 @@ class Home : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        startFetchingAnime()
+
+        adapter = AnimeAdapter()
+        val manager = LinearLayoutManager(requireContext())
+        bind.apply {
+            rvAnime.adapter = adapter
+            rvAnime.layoutManager = manager
+            rvAnime.setHasFixedSize(true)
+            isLoading = false
+        }
+
+        startFetchingAnime(1)
+        onScrollListener()
     }
 
-    private fun startFetchingAnime() {
+    @SuppressLint("NotifyDataSetChanged")
+    private fun startFetchingAnime(page: Int) {
         val jikanAPI = RetrofitHelper.getInstance().create(JikanAPI::class.java)
-        val adapter = AnimeAdapter()
+        isLoading = true
 
         lifecycleScope.launch(Dispatchers.IO) {
-            val response = jikanAPI.getTopAnime(2)
+            val response = jikanAPI.getTopAnime(page)
             if (response.isSuccessful) {
                 val dataList = response.body()?.data ?: emptyList()
 
                 withContext(Dispatchers.Main) {
                     bind.apply {
-                        rvAnime.adapter = adapter
-                        rvAnime.layoutManager = GridLayoutManager(requireContext(), 2)
-                        adapter.submitList(dataList)
+                        nextAnimeList.addAll(dataList)
+                        adapter.submitList(nextAnimeList)
+                        Log.d("Debugging", "startFetchingAnime: $nextAnimeList")
+                        adapter.notifyDataSetChanged()
+                        isLoading = false
                     }
                 }
             }
         }
+    }
+
+    private fun onScrollListener() {
+        bind.rvAnime.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                val layoutManager = bind.rvAnime.layoutManager as LinearLayoutManager
+                val lastVisibleItem = layoutManager.findLastVisibleItemPosition()
+
+                if (!isLoading && lastVisibleItem == layoutManager.itemCount - 1) {
+                    Log.d("Debugging", "${!isLoading}, $currentPage, $lastVisibleItem, ${layoutManager.itemCount}")
+                    isLoading = true
+                    currentPage++
+                    startFetchingAnime(currentPage)
+                }
+            }
+        })
     }
 }
