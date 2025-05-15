@@ -9,5 +9,5 @@ data class Anime(
     val aired: Aired,
     val rating: String,
     val score: Float,
-    val synopsis: String
+//    val synopsis: String
 )

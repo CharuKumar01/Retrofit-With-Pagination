@@ -28,7 +28,6 @@ class Home : Fragment() {
     private lateinit var adapter: AnimeAdapter
     private val nextAnimeList = mutableListOf<Anime>()
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -40,10 +39,11 @@ class Home : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = AnimeAdapter()
+        adapter = AnimeAdapter(requireActivity())
         val manager = LinearLayoutManager(requireContext())
         bind.apply {
             rvAnime.adapter = adapter
+            adapter.submitList(emptyList())
             rvAnime.layoutManager = manager
             rvAnime.setHasFixedSize(true)
             isLoading = false
@@ -61,15 +61,17 @@ class Home : Fragment() {
         lifecycleScope.launch(Dispatchers.IO) {
             val response = jikanAPI.getTopAnime(page)
             if (response.isSuccessful) {
-                val dataList = response.body()?.data ?: emptyList()
+                val dataList = response.body()?.data?.filterNotNull() ?: emptyList()
 
                 withContext(Dispatchers.Main) {
                     bind.apply {
                         nextAnimeList.addAll(dataList)
                         adapter.submitList(nextAnimeList)
-                        Log.d("Debugging", "startFetchingAnime: $nextAnimeList")
+                        Log.d("Debugging", "startFetchingAnime: $dataList")
                         adapter.notifyDataSetChanged()
                         isLoading = false
+                        fetchingProgressBar.fadeOut()
+                        progressBar.fadeOut()
                     }
                 }
             }
@@ -79,18 +81,34 @@ class Home : Fragment() {
     private fun onScrollListener() {
         bind.rvAnime.addOnScrollListener(object : RecyclerView.OnScrollListener() {
 
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+
                 val layoutManager = bind.rvAnime.layoutManager as LinearLayoutManager
                 val lastVisibleItem = layoutManager.findLastVisibleItemPosition()
 
                 if (!isLoading && lastVisibleItem == layoutManager.itemCount - 1) {
                     Log.d("Debugging", "${!isLoading}, $currentPage, $lastVisibleItem, ${layoutManager.itemCount}")
+                    bind.fetchingProgressBar.fadeIn()
                     isLoading = true
                     currentPage++
                     startFetchingAnime(currentPage)
                 }
             }
         })
+    }
+
+    private fun View.fadeIn(duration: Long = 200) {
+        if (visibility != View.VISIBLE) {
+            animate().alpha(1f).setDuration(duration).withStartAction {
+                visibility = View.VISIBLE
+            }.start()
+        }
+    }
+
+    private fun View.fadeOut(duration: Long = 200) {
+        animate().alpha(0f).setDuration(duration).withEndAction {
+            visibility = View.GONE
+        }.start()
     }
 }

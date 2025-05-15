@@ -2,4 +2,6 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="soothingBlack">#252525</color>
+    <color name="peach">#fffce9</color>
 </resources>
