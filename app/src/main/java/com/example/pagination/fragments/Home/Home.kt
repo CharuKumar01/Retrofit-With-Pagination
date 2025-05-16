@@ -1,27 +1,38 @@
-package com.example.pagination
+package com.example.pagination.fragments.Home
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.net.Uri
 import android.os.Bundle
+import android.util.Base64
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.pagination.data.Anime
+import com.example.pagination.R
+import com.example.pagination.data.Jikan.Anime
 import com.example.pagination.databinding.FragmentHomeBinding
 import com.example.pagination.retrofit.JikanAPI
-import com.example.pagination.retrofit.RetrofitHelper
+import com.example.pagination.retrofit.TraceMoeAPI
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.net.URLEncoder
+import javax.inject.Inject
+import javax.inject.Named
 
-
+@AndroidEntryPoint
 class Home : Fragment() {
     private lateinit var bind: FragmentHomeBinding
+    @Inject @Named("Jikan") lateinit var jikanAPI: JikanAPI
+    @Inject @Named("TraceMoe") lateinit var traceMoeAPI: TraceMoeAPI
 
     private var isLoading = false
     private var currentPage = 1
@@ -39,6 +50,18 @@ class Home : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val selectImage = registerForActivityResult(
+            ActivityResultContracts.GetContent()
+        ){ uri: Uri? ->
+            val base64 = uriToBase64(requireContext(), uri!!).toString()
+            val encoded = URLEncoder.encode(base64, "UTF-8")
+            Log.d("Debugging", "onViewCreated: $encoded")
+            getAnimeDetail(encoded)
+        }
+        bind.tvUpload.setOnClickListener {
+            selectImage.launch("image/*")
+        }
+
         adapter = AnimeAdapter(requireActivity())
         val manager = LinearLayoutManager(requireContext())
         bind.apply {
@@ -55,7 +78,6 @@ class Home : Fragment() {
 
     @SuppressLint("NotifyDataSetChanged")
     private fun startFetchingAnime(page: Int) {
-        val jikanAPI = RetrofitHelper.getInstance().create(JikanAPI::class.java)
         isLoading = true
 
         lifecycleScope.launch(Dispatchers.IO) {
@@ -67,7 +89,7 @@ class Home : Fragment() {
                     bind.apply {
                         nextAnimeList.addAll(dataList)
                         adapter.submitList(nextAnimeList)
-                        Log.d("Debugging", "startFetchingAnime: $dataList")
+//                        Log.d("Debugging", "startFetchingAnime: $dataList")
                         adapter.notifyDataSetChanged()
                         isLoading = false
                         fetchingProgressBar.fadeOut()
@@ -110,5 +132,21 @@ class Home : Fragment() {
         animate().alpha(0f).setDuration(duration).withEndAction {
             visibility = View.GONE
         }.start()
+    }
+
+    private fun getAnimeDetail(uri: String){
+        lifecycleScope.launch(Dispatchers.IO) {
+            val response = traceMoeAPI.getAnimeDetails(uri)
+
+            if (response.isSuccessful){
+                Log.d("Debugging", "getAnimeDetail: ${response.body()}")
+            }
+        }
+    }
+
+    private fun uriToBase64(context: Context, uri: Uri): String? {
+        val inputStream = context.contentResolver.openInputStream(uri) ?: return null
+        val bytes = inputStream.readBytes()
+        return Base64.encodeToString(bytes, Base64.NO_WRAP)
     }
 }

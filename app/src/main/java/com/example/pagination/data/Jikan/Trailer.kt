@@ -1,4 +1,4 @@
-package com.example.pagination.data
+package com.example.pagination.data.Jikan
 
 data class Trailer(
     val youtube_id: String,

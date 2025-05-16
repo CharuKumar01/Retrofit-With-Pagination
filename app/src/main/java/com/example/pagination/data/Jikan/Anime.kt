@@ -1,4 +1,4 @@
-package com.example.pagination.data
+package com.example.pagination.data.Jikan
 
 data class Anime(
     val mal_id: Int,

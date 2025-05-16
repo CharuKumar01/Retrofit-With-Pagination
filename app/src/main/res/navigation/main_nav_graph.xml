@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/home2"
-        android:name="com.example.pagination.Home"
+        android:name="com.example.pagination.fragments.Home.Home"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" />
 </navigation>

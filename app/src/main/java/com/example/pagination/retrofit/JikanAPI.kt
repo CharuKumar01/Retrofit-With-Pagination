@@ -1,6 +1,6 @@
 package com.example.pagination.retrofit
 
-import com.example.pagination.data.AnimeResponse
+import com.example.pagination.data.Jikan.AnimeResponse
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
