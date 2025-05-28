@@ -2,7 +2,7 @@ package com.example.pagination.data.Jikan
 
 data class Anime(
     val mal_id: Int,
-    val title_english: String,
+    val title_english: String? = null,
     val images: Images,
     val trailer: Trailer,
     val episodes: Int,

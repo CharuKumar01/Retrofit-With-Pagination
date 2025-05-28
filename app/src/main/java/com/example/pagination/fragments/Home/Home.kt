@@ -1,15 +1,11 @@
 package com.example.pagination.fragments.Home
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.net.Uri
 import android.os.Bundle
-import android.util.Base64
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -24,7 +20,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.net.URLEncoder
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -50,17 +45,17 @@ class Home : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val selectImage = registerForActivityResult(
-            ActivityResultContracts.GetContent()
-        ){ uri: Uri? ->
-            val base64 = uriToBase64(requireContext(), uri!!).toString()
-            val encoded = URLEncoder.encode(base64, "UTF-8")
-            Log.d("Debugging", "onViewCreated: $encoded")
-            getAnimeDetail(encoded)
-        }
-        bind.tvUpload.setOnClickListener {
-            selectImage.launch("image/*")
-        }
+//        val selectImage = registerForActivityResult(
+//            ActivityResultContracts.GetContent()
+//        ){ uri: Uri? ->
+//            val base64 = uriToBase64(requireContext(), uri!!).toString()
+//            val encoded = URLEncoder.encode(base64, "UTF-8")
+//            Log.d("Debugging", "onViewCreated: $encoded")
+//            getAnimeDetail(encoded)
+//        }
+//        bind.tvUpload.setOnClickListener {
+//            selectImage.launch("image/*")
+//        }
 
         adapter = AnimeAdapter(requireActivity())
         val manager = LinearLayoutManager(requireContext())
@@ -83,17 +78,20 @@ class Home : Fragment() {
         lifecycleScope.launch(Dispatchers.IO) {
             val response = jikanAPI.getTopAnime(page)
             if (response.isSuccessful) {
-                val dataList = response.body()?.data?.filterNotNull() ?: emptyList()
+                val dataList = response.body()?.data?.filter {
+                    it.title_english != null
+                } ?: emptyList()
 
                 withContext(Dispatchers.Main) {
                     bind.apply {
                         nextAnimeList.addAll(dataList)
                         adapter.submitList(nextAnimeList)
-//                        Log.d("Debugging", "startFetchingAnime: $dataList")
+                        Log.d("Debugging", "startFetchingAnime: $dataList")
                         adapter.notifyDataSetChanged()
                         isLoading = false
                         fetchingProgressBar.fadeOut()
                         progressBar.fadeOut()
+                        cvSearch.fadeIn()
                     }
                 }
             }
@@ -102,6 +100,14 @@ class Home : Fragment() {
 
     private fun onScrollListener() {
         bind.rvAnime.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+
+                if (newState == RecyclerView.SCROLL_STATE_DRAGGING){
+//                    if (ScrollDirection)
+                }
+            }
 
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
@@ -134,19 +140,19 @@ class Home : Fragment() {
         }.start()
     }
 
-    private fun getAnimeDetail(uri: String){
-        lifecycleScope.launch(Dispatchers.IO) {
-            val response = traceMoeAPI.getAnimeDetails(uri)
+//    private fun getAnimeDetail(uri: String){
+//        lifecycleScope.launch(Dispatchers.IO) {
+//            val response = traceMoeAPI.getAnimeDetails(uri)
+//
+//            if (response.isSuccessful){
+//                Log.d("Debugging", "getAnimeDetail: ${response.body()}")
+//            }
+//        }
+//    }
 
-            if (response.isSuccessful){
-                Log.d("Debugging", "getAnimeDetail: ${response.body()}")
-            }
-        }
-    }
-
-    private fun uriToBase64(context: Context, uri: Uri): String? {
-        val inputStream = context.contentResolver.openInputStream(uri) ?: return null
-        val bytes = inputStream.readBytes()
-        return Base64.encodeToString(bytes, Base64.NO_WRAP)
-    }
+//    private fun uriToBase64(context: Context, uri: Uri): String? {
+//        val inputStream = context.contentResolver.openInputStream(uri) ?: return null
+//        val bytes = inputStream.readBytes()
+//        return Base64.encodeToString(bytes, Base64.NO_WRAP)
+//    }
 }
