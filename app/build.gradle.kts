@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     id("com.google.devtools.ksp")
     id("dagger.hilt.android.plugin")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -62,4 +63,7 @@ dependencies {
 
     ksp("com.google.dagger:hilt-compiler:2.56.2")
     implementation("com.google.dagger:hilt-android:2.56.2")
+
+    implementation(platform("com.google.firebase:firebase-bom:32.7.2"))
+    implementation("com.google.firebase:firebase-auth-ktx")
 }
