@@ -1,4 +1,4 @@
-package com.example.pagination.fragments.SearchByImage
+package com.example.pagination.fragments
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

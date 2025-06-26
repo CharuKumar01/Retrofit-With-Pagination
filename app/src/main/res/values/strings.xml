@@ -5,4 +5,10 @@
     <string name="text">Testing</string>
     <string name="trailer"><u>Watch Trailer</u></string>
     <string name="upload_from_gallery">Upload from gallery</string>
+    <string name="create_account">Create \nAccount</string>
+    <string name="account">Already have an account?</string>
+    <string name="login"><u>Log In</u></string>
+    <string name="full_name">full name</string>
+    <string name="email">email</string>
+    <string name="password">password</string>
 </resources>

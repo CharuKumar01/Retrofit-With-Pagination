@@ -3,11 +3,34 @@
              xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_nav_graph"
-    app:startDestination="@id/home2">
+    app:startDestination="@id/register">
 
     <fragment
         android:id="@+id/home2"
         android:name="com.example.pagination.fragments.Home.Home"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_home2_to_search"
+            app:destination="@id/search" />
+    </fragment>
+    <fragment
+        android:id="@+id/register"
+        tools:layout="@layout/fragment_register"
+        android:name="com.example.pagination.fragments.Register"
+        android:label="Register" >
+        <action
+            android:id="@+id/action_register_to_login"
+            app:destination="@id/login" />
+    </fragment>
+    <fragment
+        android:id="@+id/search"
+        tools:layout="@layout/fragment_search"
+        android:name="com.example.pagination.fragments.Search"
+        android:label="Search" />
+    <fragment
+        android:id="@+id/login"
+        android:name="com.example.pagination.fragments.Login"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" />
 </navigation>
