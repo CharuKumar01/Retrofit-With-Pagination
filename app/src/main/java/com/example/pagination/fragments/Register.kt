@@ -1,11 +1,11 @@
 package com.example.pagination.fragments
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.pagination.R
 import com.example.pagination.databinding.FragmentRegisterBinding
@@ -26,5 +26,4 @@ class Register : Fragment() {
             findNavController().navigate(R.id.action_register_to_login)
         }
     }
-
 }

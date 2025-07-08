@@ -13,7 +13,13 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:src="@drawable/register" />
+            android:src="@drawable/register"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.5" />
 
         <TextView
             android:id="@+id/tv_createAccount"
@@ -45,6 +51,7 @@
             app:boxCornerRadiusTopEnd="16dp"
             app:boxCornerRadiusTopStart="16dp"
             app:boxStrokeColor="@color/text_layout_outline"
+            app:cursorColor="@color/white"
             app:hintTextColor="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -75,6 +82,7 @@
             app:boxCornerRadiusTopEnd="16dp"
             app:boxCornerRadiusTopStart="16dp"
             app:boxStrokeColor="@color/text_layout_outline"
+            app:cursorColor="@color/white"
             app:hintTextColor="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -106,6 +114,7 @@
             app:boxCornerRadiusTopEnd="16dp"
             app:boxCornerRadiusTopStart="16dp"
             app:boxStrokeColor="@color/text_layout_outline"
+            app:cursorColor="@color/white"
             app:endIconMode="password_toggle"
             app:endIconTint="@color/white"
             app:hintTextColor="@color/white"
@@ -124,6 +133,20 @@
                 android:textColor="@color/white" />
 
         </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:id="@+id/btn_register"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/register"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/txtLay_password"
+            app:layout_constraintVertical_bias="0.1" />
 
         <TextView
             android:id="@+id/tv_alreadyHaveAnAccount"
@@ -145,8 +168,8 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="60dp"
             android:fontFamily="@font/alata"
-            android:text="@string/login"
-            android:textColor="@color/blue"
+            android:text="@string/login_underscore"
+            android:textColor="@color/green"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

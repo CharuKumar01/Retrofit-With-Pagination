@@ -17,7 +17,6 @@ class Search : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         bind = DataBindingUtil.inflate(inflater, R.layout.fragment_search, container, false)
-
         return bind.root
     }
 }

@@ -7,6 +7,5 @@
         android:layout_height="match_parent"
         tools:context=".fragments.Search">
 
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

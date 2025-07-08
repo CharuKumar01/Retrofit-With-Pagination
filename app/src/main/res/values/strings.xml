@@ -6,9 +6,15 @@
     <string name="trailer"><u>Watch Trailer</u></string>
     <string name="upload_from_gallery">Upload from gallery</string>
     <string name="create_account">Create \nAccount</string>
+    <string name="welcome">Welcome \nBack</string>
     <string name="account">Already have an account?</string>
-    <string name="login"><u>Log In</u></string>
+    <string name="no_account">Don\'t have and account?</string>
+    <string name="register_underscore"><u>Register</u></string>
+    <string name="login_underscore"><u>Log In</u></string>
     <string name="full_name">full name</string>
     <string name="email">email</string>
     <string name="password">password</string>
+    <string name="register">Register</string>
+    <string name="login">Log In</string>
+    <string name="forgot_password">Forgot Password?</string>
 </resources>
