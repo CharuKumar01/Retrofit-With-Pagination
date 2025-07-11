@@ -52,6 +52,7 @@
             app:layout_constraintVertical_bias="0.23">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/tf_email"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:imeOptions="actionNext"
@@ -86,6 +87,7 @@
             app:layout_constraintVertical_bias="0.03">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/tf_password"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:imeOptions="actionNext"

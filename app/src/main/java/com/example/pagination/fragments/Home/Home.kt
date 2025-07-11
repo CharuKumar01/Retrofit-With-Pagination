@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pagination.R
@@ -69,6 +70,10 @@ class Home : Fragment() {
 
         startFetchingAnime(1)
         onScrollListener()
+
+        bind.cvSearch.setOnClickListener {
+            findNavController().navigate(R.id.action_home2_to_search)
+        }
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -100,10 +105,6 @@ class Home : Fragment() {
 
     private fun onScrollListener() {
         bind.rvAnime.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
-            }
 
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
